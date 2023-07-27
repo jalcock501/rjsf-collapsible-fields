@@ -1,24 +1,73 @@
-import logo from './logo.svg';
-import './App.css';
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
+import Form from "@rjsf/fluent-ui";
+import ArrayFieldTemplate from "./components/customArrayTemplates";
+
+const schema: RJSFSchema = {
+  title: "Test form",
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+    },
+    age: {
+      type: "number",
+    },
+    CollapsiblePanel: {
+      type: "array",
+      title: "Collapsible Panel",
+      items: {
+        type: "object",
+        title: "Array Item",
+        required: ["ArrayLabel", "ArrayItem2"],
+        properties: {
+          ArrayLabel: {
+            type: "string",
+            title: "Array Label",
+          },
+          Priority: {
+            type: "integer",
+            title: "Array Item 2",
+          },
+        },
+      },
+    },
+  },
+};
+
+const uiSchema = {
+  "ui:ArrayFieldTemplate": ArrayFieldTemplate,
+  name: {
+    "ui:classNames": "custom-class-name",
+  },
+  age: {
+    "ui:classNames": "custom-class-age",
+  },
+  CollapsiblePanel: {
+    "ui:description": "Panel Description.",
+    items: {
+      ArrayLabel: {
+        "ui:enableMarkdownInDescription": true,
+        "ui:description": "Label Description",
+        "ui:help": "A Label Description",
+      },
+      ArrayItem2: {
+        "ui:enableMarkdownInDescription": true,
+        "ui:description": "Just another Item",
+        "ui:help": "This is just another item",
+      },
+    },
+  },
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Form
+      schema={schema}
+      uiSchema={uiSchema}
+      validator={validator}
+      templates={{ ArrayFieldTemplate }}
+    />
   );
 }
 
